@@ -1,0 +1,42 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+title Casos de Uso para Sondagem de Requisitos - Clínica Veterinária São Francisco
+
+actor Cliente as cliente
+actor Recepcionista as recepcionista
+actor Veterinario as veterinario
+actor Administrador as administrador
+actor Sistema as sistema
+
+package "4. Integração de Notificações (WhatsApp/SMS/E-mail) e Conteúdo" {
+  usecase "Agendar Consulta" as UC4_1
+  usecase "Registrar Vacina" as UC4_2
+  usecase "Enviar Lembrete de Consulta" as UC4_3 <<Necessita de Sondagem>>
+  usecase "Enviar Notificação de Vacina a Vencer" as UC4_4 <<Necessita de Sondagem>>
+
+  recepcionista --> UC4_1
+  veterinario --> UC4_2
+  
+  UC4_1 .> UC4_3 : <<dispara>>
+  UC4_2 .> UC4_4 : <<dispara>>
+  
+  sistema --> UC4_3
+  sistema --> UC4_4
+  UC4_3 --> cliente : <<envia notificação>>
+  UC4_4 --> cliente : <<envia notificação>>
+  
+  note right of UC4_3
+    **Motivo:** Reduzir faltas, aumentar a satisfação do cliente
+    e otimizar a agenda.
+    Precisamos definir o canal preferencial e o conteúdo exato das mensagens.
+  end note
+
+  note right of UC4_4
+    **Motivo:** Promover a saúde preventiva e o retorno dos clientes.
+    Precisamos definir o canal preferencial e o conteúdo exato das mensagens.
+  end note
+}
+
+@enduml

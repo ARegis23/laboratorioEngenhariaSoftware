@@ -1,0 +1,40 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+title Casos de Uso para Sondagem de Requisitos - Clínica Veterinária São Francisco
+
+actor Cliente as cliente
+actor Recepcionista as recepcionista
+actor Veterinario as veterinario
+actor Administrador as administrador
+actor Sistema as sistema
+
+package "3. Fluxo de Atendimento de Urgência/Emergência" {
+  usecase "Apresentar Pet em Emergência" as UC3_1
+  usecase "Realizar Cadastro Rápido de Emergência" as UC3_2 <<Necessita de Sondagem>>
+  usecase "Iniciar Atendimento Veterinário Urgente" as UC3_3
+  usecase "Realizar Cadastro Completo" as UC3_4 <<Necessita de Sondagem>>
+
+  cliente --> UC3_1
+  recepcionista --> UC3_1
+  recepcionista --> UC3_2
+  UC3_2 --> veterinario : <<notifica>>
+  veterinario --> UC3_3
+  UC3_3 --> recepcionista : <<informa necessidade de dados completos>>
+  recepcionista --> UC3_4
+  
+  UC3_3 .> UC3_4 : <<include>>
+
+  note right of UC3_2
+    **Motivo:** Otimizar o tempo de atendimento em situações críticas,
+    priorizando o tratamento do animal.
+    Precisamos definir as informações mínimas e o fluxo pós-emergência.
+  end note
+
+  note right of UC3_4
+    **Motivo:** Garantir consistência dos dados do cliente e do pet.
+    Necessário avaliar duplicidade de cadastro e fluxo de atualização.
+  end note
+}
+@enduml

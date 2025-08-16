@@ -1,0 +1,30 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+title Casos de Uso para Sondagem de Requisitos - Clínica Veterinária São Francisco
+
+actor Cliente as cliente
+actor Recepcionista as recepcionista
+actor Veterinário as veterinario
+actor Administrador as administrador
+
+package "1. Identificação Única de Pets" {
+  usecase "Buscar Pet" as UC1_1
+  usecase "Agendar Retorno" as UC1_2
+  usecase "Identificar Pet Unicamente" as UC1_3 <<Necessita de Sondagem>>
+
+  cliente --> UC1_2
+  recepcionista --> UC1_1
+
+  UC1_1 .> UC1_3 : <<include>>
+  UC1_2 .> UC1_3 : <<include>>
+  UC1_3 ..> UC1_1 : <<extend>>
+
+  note right of UC1_3
+    **Motivo:** Evitar ambiguidades ao buscar pets
+    com nomes iguais e garantir acesso ao histórico correto.
+    É necessário definir o formato do identificador único.
+  end note
+}
+@enduml

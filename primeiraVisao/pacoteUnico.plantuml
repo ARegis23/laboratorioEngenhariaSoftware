@@ -1,0 +1,86 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Panorama Geral - Casos de Uso para Sondagem de Requisitos  
+title Clínica Veterinária São Francisco
+
+actor Cliente as cliente
+actor Recepcionista as recepcionista
+actor Veterinario as veterinario
+actor Administrador as administrador
+actor Sistema as sistema
+
+' ---------------- PACOTE 1 ----------------
+package "1. Identificação Única de Pets" {
+  usecase "Buscar Pet" as UC1_1
+  usecase "Agendar Retorno" as UC1_2
+  usecase "Identificar Pet Unicamente" as UC1_3 <<Necessita de Sondagem>>
+
+  cliente --> UC1_2
+  recepcionista --> UC1_1
+  UC1_1 .> UC1_3 : <<include>>
+  UC1_2 .> UC1_3 : <<include>>
+}
+
+' ---------------- PACOTE 2 ----------------
+package "2. Regras de Edição de Anotações Médicas e Auditoria" {
+  usecase "Registrar Atendimento Médico" as UC2_1
+  usecase "Editar Anotação Médica" as UC2_2
+  usecase "Registrar Auditoria de Edição" as UC2_3 <<Necessita de Sondagem>>
+
+  veterinario --> UC2_1
+  veterinario --> UC2_2
+  administrador --> UC2_2
+  UC2_2 .> UC2_3 : <<include>>
+}
+
+' ---------------- PACOTE 3 ----------------
+package "3. Fluxo de Atendimento de Urgência/Emergência" {
+  usecase "Apresentar Pet em Emergência" as UC3_1
+  usecase "Realizar Cadastro Rápido de Emergência" as UC3_2 <<Necessita de Sondagem>>
+  usecase "Iniciar Atendimento Veterinário Urgente" as UC3_3
+  usecase "Realizar Cadastro Completo" as UC3_4 <<Necessita de Sondagem>>
+
+  cliente --> UC3_1
+  recepcionista --> UC3_1
+  recepcionista --> UC3_2
+  UC3_2 --> veterinario : <<notifica>>
+  veterinario --> UC3_3
+  UC3_3 .> UC3_4 : <<include>>
+  recepcionista --> UC3_4
+}
+
+' ---------------- PACOTE 4 ----------------
+package "4. Integração de Notificações (WhatsApp/SMS/E-mail)" {
+  usecase "Agendar Consulta" as UC4_1
+  usecase "Registrar Vacina" as UC4_2
+  usecase "Enviar Lembrete de Consulta" as UC4_3 <<Necessita de Sondagem>>
+  usecase "Enviar Notificação de Vacina a Vencer" as UC4_4 <<Necessita de Sondagem>>
+
+  recepcionista --> UC4_1
+  veterinario --> UC4_2
+  sistema --> UC4_3
+  sistema --> UC4_4
+  UC4_1 .> UC4_3 : <<dispara>>
+  UC4_2 .> UC4_4 : <<dispara>>
+  UC4_3 --> cliente : <<envia>>
+  UC4_4 --> cliente : <<envia>>
+}
+
+' ---------------- PACOTE 5 ----------------
+package "5. Movimentação de Estoque Vinculada ao Atendimento" {
+  usecase "Realizar Atendimento" as UC5_1
+  usecase "Registrar Uso de Medicamento/Insumo" as UC5_2 <<Necessita de Sondagem>>
+  usecase "Dar Baixa Automática no Estoque" as UC5_3 <<Necessita de Sondagem>>
+  usecase "Gerar Relatório de Consumo por Pet" as UC5_4
+
+  veterinario --> UC5_1
+  UC5_1 .> UC5_2 : <<include>>
+  UC5_2 .> UC5_3 : <<dispara>>
+  sistema --> UC5_3
+  veterinario --> UC5_4
+}
+
+@enduml
